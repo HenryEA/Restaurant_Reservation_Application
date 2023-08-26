@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
+import * as jose from "jose";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -12,7 +13,7 @@ export default async function handler(
   const bearerToken = req.headers["authorization"] as string;
   const token = bearerToken.split(" ")[1];
 
-  const payload = jwt.decode(token) as { email: string };
+  const payload = jose.decodeJwt(token) as { email: string };
 
   if (!payload.email) {
     return res.status(401).json({
